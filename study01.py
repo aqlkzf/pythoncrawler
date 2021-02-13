@@ -20,6 +20,10 @@ def main():
     print(getData(baseurl))
 
 
+#全局变量
+#影片详情链接的规则
+findlink=re.compile(r'<a href="(.*?)">')       #创建正则表达式对象，表示规则（字符串的模式）
+
 #爬取网页
 #解析数据
 #保存数据
@@ -28,11 +32,19 @@ def main():
 def getData(baseurl):
     datalist=[]
 
-    for i in range(0,10):
+    for i in range(0,1):
         url=baseurl+str(i*25)
         #datalist.append(askurl(url))
         html=askurl(url)  #保存获取到的网页源码
     #逐一解析
+    soup=BeautifulSoup(html,"html.parser")
+    for item in soup.find_all('div',class_="item"):#查找需要的字符串，行成列表
+        #print(item)  #测试  ，查看电影item所有信息
+        data=[]  #保存一部电影所有信息
+        item=str(item)
+        #获取到影片详情的链接
+        link=re.findall(findlink,item) [0]  #re库通过正则表达式查找指定的字符串
+        print(link)
     return datalist
 
 
@@ -46,7 +58,7 @@ def askurl(url):
     try:
         response  = urllib.request.urlopen(request)
         html=response.read().decode('utf-8')
-        print(html)
+        #print(html)
     except urllib.error.URLError as e:
         if hasatter(e,"code"):
             print(e.code)
@@ -67,3 +79,6 @@ if __name__ =="__main__":   #当程序执行时
     #调用函数
     main()
    #askurl("https://movie.douban.com/top250?start=")
+
+
+
